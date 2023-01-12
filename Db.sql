@@ -51,3 +51,9 @@ FROM `departments`
 SELECT * 
 FROM `teachers`
 WHERE `phone` IS NULL;
+
+9.media dei voti per esame
+
+SELECT `exam_id`, AVG(`vote`) as `voto`
+FROM `exam_student`
+GROUP BY `exam_id`;
