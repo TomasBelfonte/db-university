@@ -81,7 +81,44 @@ INNER JOIN `departments`
 	ON `departments`.`id` = `degrees`.`department_id`
 WHERE `departments`.`name` = "Dipartimento di Matematica";
 
+
+# Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica
+SELECT DISTINCT 
+	`teachers`.`name`, 
+	`teachers`.`surname`,
+	`teachers`.`phone`,
+    `teachers`.`email`, 
+    `teachers`.`office_address`,
+	`teachers`.`office_number`
+FROM `teachers`
+JOIN `course_teacher`
+	ON `teachers`.`id` = `course_teacher`.`teacher_id`
+JOIN `courses`
+	ON `courses`.`id` = `course_teacher`.`course_id`
+JOIN `degrees`
+	ON `degrees`.`id` = `courses`.`degree_id`
+JOIN `departments`
+	ON `departments`.`id` = `degrees`.`department_id`
+WHERE `departments`.`name` = 'Dipartimento di Matematica'
+ORDER BY `teachers`.`surname`, `teachers`.`name`;
+
+
 7. BONUS: Selezionare per ogni studente quanti tentativi di esame ha sostenuto per superare ciascuno dei suoi esami
 
-    Non è presente il dato dei tentativi effettuati per lo stesso esame all'interno del database che è a disposizione, per poter
-    ritrovare il dato richiesto.
+    
+
+	# BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per
+# superare ciascuno dei suoi esami
+SELECT `students`.`id` AS `studente`,
+`courses`.`id` AS `corso`,
+COUNT(`exams`.`id`),
+MAX(`exam_student`.`vote`) as `voto_migliore`
+FROM `students`
+JOIN `exam_student`
+	ON `students`.`id` = `exam_student`.`student_id`
+JOIN `exams`
+	ON `exam_student`.`exam_id` = `exams`.`id`
+JOIN `courses`
+	ON `exams`.`course_id` = `courses`.`id`
+GROUP BY `students`.`id`, `courses`.`id`
+HAVING `voto_migliore` >= 18;
